@@ -1,0 +1,84 @@
+name: synops-agent
+version: "1.0.0"
+description: >
+  Synopsys EDA AI agent with deep expertise in PNR (Place and Route) flows,
+  physical design, and integration with Synopsys SolveNet support systems.
+
+metadata:
+  domain: Electronic Design Automation (EDA)
+  vendor: Synopsys
+  focus:
+    - Physical Design
+    - PNR Flow
+    - Static Timing Analysis
+    - Power Analysis
+    - Design Rule Checking
+
+capabilities:
+  - id: pnr_flow
+    description: Place and Route flow guidance and automation
+    profile: profiles/pnr-expertise.yml
+
+  - id: physical_design
+    description: Physical design domain knowledge and best practices
+    knowledge: knowledge/physical-design.md
+
+  - id: solvenet_integration
+    description: Integration with Synopsys SolveNet support portal
+    config: integrations/solvenet.yml
+
+  - id: agent_discovery
+    description: Agent search and discovery system
+    registry: discovery/agent-registry.yml
+
+tools:
+  - name: icc2_shell
+    description: IC Compiler II interactive shell
+    commands:
+      - open_lib
+      - create_lib
+      - read_verilog
+      - link_design
+      - initialize_floorplan
+      - place_opt
+      - clock_opt
+      - route_auto
+      - report_timing
+      - report_power
+      - check_design
+
+  - name: pt_shell
+    description: PrimeTime static timing analysis
+    commands:
+      - read_sdc
+      - report_timing
+      - report_clock_timing
+      - check_timing
+
+  - name: dc_shell
+    description: Design Compiler synthesis
+    commands:
+      - read_verilog
+      - elaborate
+      - compile_ultra
+      - write_netlist
+
+  - name: starrc
+    description: StarRC parasitic extraction
+    commands:
+      - run_extraction
+
+response_style:
+  language: English
+  format: structured
+  include_tcl_examples: true
+  include_solvenet_links: true
+  cite_documentation: true
+
+search:
+  enabled: true
+  sources:
+    - solvenet
+    - internal_knowledge
+    - synopsys_docs
+  max_results: 10

@@ -1,0 +1,171 @@
+name: PNR Flow Expertise Profile
+version: "1.0.0"
+description: >
+  Comprehensive Place and Route (PNR) flow expertise profile for Synopsys
+  IC Compiler II (ICC2). Covers all stages from design import through
+  final signoff-quality layout.
+
+tool: IC Compiler II (ICC2)
+supported_versions:
+  - "2022.03"
+  - "2022.12"
+  - "2023.03"
+  - "2023.12"
+  - "2024.03"
+
+flow_stages:
+  - id: design_setup
+    name: Design Setup and Import
+    description: Initial design import and library configuration
+    key_commands:
+      - create_lib
+      - open_lib
+      - read_verilog
+      - link_design
+      - read_sdc
+      - read_parasitic_tech_file
+    common_issues:
+      - Missing NDM libraries
+      - Incorrect TLU+ files
+      - SDC constraint errors
+      - Missing supply nets
+
+  - id: floorplanning
+    name: Floorplanning
+    description: Die/core area definition, macro placement, and power planning
+    key_commands:
+      - initialize_floorplan
+      - set_macro_placement_constraint
+      - create_voltage_area
+      - compile_pg_in_block
+      - synthesize_pg_network
+      - create_pg_mesh_pattern
+      - create_pg_std_cell_conn_pattern
+    common_issues:
+      - IR drop violations
+      - Macro congestion hotspots
+      - Power domain boundary issues
+      - Insufficient routing resources
+
+  - id: placement
+    name: Placement
+    description: Standard cell placement with timing and congestion awareness
+    key_commands:
+      - place_opt
+      - refine_placement
+      - set_placement_status
+      - legalize_placement
+    options:
+      place_opt:
+        - "-effort high"
+        - "-congestion"
+        - "-timing_driven"
+        - "-power"
+    common_issues:
+      - Congestion hotspots
+      - Timing violations post-placement
+      - Cell overlap after legalization
+      - High cell density in corners
+
+  - id: clock_tree_synthesis
+    name: Clock Tree Synthesis (CTS)
+    description: Clock network synthesis and optimization
+    key_commands:
+      - clock_opt
+      - set_clock_tree_options
+      - report_clock_tree
+      - check_clock_tree
+    cts_styles:
+      - Traditional H-tree
+      - Mesh CTS
+      - BLE (Buffered-Level-of-Effort)
+    common_issues:
+      - Clock skew violations
+      - Max transition/capacitance on clock nets
+      - Hold violations after CTS
+      - Insertion delay mismatches
+
+  - id: routing
+    name: Routing
+    description: Global and detailed routing of all signal nets
+    key_commands:
+      - route_auto
+      - route_global
+      - route_track
+      - route_detail
+      - route_opt
+      - check_routes
+    common_issues:
+      - DRC violations after routing
+      - Routing congestion
+      - Crosstalk noise/glitch violations
+      - Via insufficiency
+
+  - id: signoff
+    name: Signoff and Closure
+    description: Final timing, DRC, and LVS signoff
+    key_commands:
+      - report_timing
+      - report_power
+      - check_design
+      - write_gds
+      - write_verilog
+      - write_sdf
+    signoff_checks:
+      - timing: "WNS/TNS/WHS/THS must meet targets"
+      - drc: "Zero DRC violations required"
+      - lvs: "LVS must pass clean"
+      - erc: "All electrical rule checks must pass"
+      - ir_drop: "Static/dynamic IR drop within limits"
+
+timing_constraints:
+  setup:
+    description: Setup timing closure methodology
+    corners:
+      - ss_0p72v_125c  # Slow corner
+      - tt_0p8v_25c    # Typical corner
+    target_wns: 0
+    target_tns: 0
+
+  hold:
+    description: Hold timing closure methodology
+    corners:
+      - ff_0p88v_m40c  # Fast corner
+    target_whs: 0
+
+power_optimization:
+  techniques:
+    - Multi-Vt cell swapping
+    - Clock gating
+    - Power gating
+    - Dynamic voltage scaling
+    - Activity-based optimization
+
+advanced_nodes:
+  supported:
+    - "3nm"
+    - "5nm"
+    - "7nm"
+    - "12nm"
+    - "16nm"
+    - "28nm"
+  considerations:
+    - Double/Triple patterning
+    - FinFET device orientation constraints
+    - Self-aligned contacts
+    - Advanced node DRC complexity
+
+debug_methodology:
+  timing_debug:
+    - Identify critical paths using report_timing
+    - Analyze slack histogram
+    - Check for false paths / multicycle paths
+    - Review physical path for detour routing
+    - Optimize buffer sizing on critical paths
+
+  congestion_debug:
+    - Review routing congestion map
+    - Identify congestion hotspots with report_congestion
+    - Adjust macro placement
+    - Add placement blockages
+    - Use partial blockages in congested areas

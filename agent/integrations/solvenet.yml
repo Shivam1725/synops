@@ -1,0 +1,154 @@
+name: SolveNet Integration
+version: "1.0.0"
+description: >
+  Configuration for integrating with Synopsys SolveNet support portal.
+  SolveNet provides access to technical documentation, support cases,
+  known issues (KIs), design advisories, and release notes.
+
+connection:
+  base_url: "https://solvenet.synopsys.com"
+  auth:
+    type: oauth2
+    token_env: SOLVENET_API_TOKEN
+  timeout_seconds: 30
+  retry_attempts: 3
+
+endpoints:
+  search:
+    path: "/api/v1/search"
+    method: GET
+    params:
+      - name: q
+        description: Search query string
+        required: true
+      - name: product
+        description: Filter by Synopsys product name
+        required: false
+      - name: version
+        description: Filter by product version
+        required: false
+      - name: type
+        description: "Result type: ki, advisory, doc, release_note"
+        required: false
+      - name: limit
+        description: Max results to return
+        default: 10
+        required: false
+
+  known_issues:
+    path: "/api/v1/known-issues"
+    method: GET
+    params:
+      - name: product
+        required: true
+      - name: version
+        required: false
+      - name: severity
+        description: "critical, high, medium, low"
+        required: false
+      - name: status
+        description: "open, fixed, wont_fix"
+        required: false
+
+  design_advisories:
+    path: "/api/v1/design-advisories"
+    method: GET
+    params:
+      - name: product
+        required: true
+      - name: category
+        description: "timing, routing, floorplan, cts, signoff"
+        required: false
+
+  documentation:
+    path: "/api/v1/docs"
+    method: GET
+    params:
+      - name: product
+        required: true
+      - name: version
+        required: false
+      - name: topic
+        required: false
+
+  support_cases:
+    path: "/api/v1/cases"
+    method: GET
+    params:
+      - name: case_id
+        required: false
+      - name: status
+        description: "open, closed, pending"
+        required: false
+
+products:
+  - id: icc2
+    name: IC Compiler II
+    solvenet_product_id: "ICC2"
+    versions:
+      - "2024.03"
+      - "2023.12"
+      - "2023.03"
+      - "2022.12"
+      - "2022.03"
+
+  - id: primetime
+    name: PrimeTime
+    solvenet_product_id: "PT"
+    versions:
+      - "2024.03"
+      - "2023.12"
+      - "2023.03"
+
+  - id: design_compiler
+    name: Design Compiler
+    solvenet_product_id: "DC"
+    versions:
+      - "2024.03"
+      - "2023.12"
+
+  - id: starrc
+    name: StarRC
+    solvenet_product_id: "STARRC"
+    versions:
+      - "2024.03"
+      - "2023.12"
+
+  - id: icv
+    name: IC Validator
+    solvenet_product_id: "ICV"
+    versions:
+      - "2024.03"
+      - "2023.12"
+
+  - id: vcs
+    name: VCS
+    solvenet_product_id: "VCS"
+    versions:
+      - "2024.03"
+      - "2023.12"
+
+search_behavior:
+  auto_search_on_error: true
+  error_patterns:
+    - pattern: "Error: .*"
+      search_field: "error_message"
+    - pattern: "Warning:.*critical.*"
+      search_field: "warning_message"
+    - pattern: "ICCII-\\d+"
+      search_field: "message_id"
+
+  result_ranking:
+    - known_issue: 10
+    - design_advisory: 8
+    - tech_note: 6
+    - documentation: 4
+    - forum_post: 2
+
+  citation_format: "SolveNet [{type}]: {title} ({url})"
+
+fallback:
+  enabled: true
+  message: >
+    SolveNet search unavailable. Please visit https://solvenet.synopsys.com
+    directly or contact Synopsys support at support@synopsys.com.

@@ -1,0 +1,133 @@
+name: Agent Registry
+version: "1.0.0"
+description: >
+  Registry of all Synops agents available for Synopsys EDA workflows.
+  Used by the agent discovery system to locate, load, and coordinate
+  specialized agents.
+
+agents:
+  - id: synops-pnr-agent
+    name: Synops PNR Agent
+    version: "1.0.0"
+    description: >
+      Primary agent for Place and Route (PNR) flows using Synopsys ICC2.
+      Provides guidance on all PNR stages from design import through signoff.
+    config: "../config/agent.yml"
+    expertise:
+      - pnr_flow
+      - physical_design
+      - timing_closure
+      - power_planning
+      - clock_tree_synthesis
+      - floorplanning
+      - congestion_analysis
+    tools:
+      - icc2_shell
+      - pt_shell
+    tags:
+      - pnr
+      - icc2
+      - physical-design
+      - placement
+      - routing
+      - cts
+      - clock
+      - floorplan
+      - signoff
+      - congestion
+
+  - id: synops-timing-agent
+    name: Synops Timing Analysis Agent
+    version: "1.0.0"
+    description: >
+      Specialized agent for static timing analysis using PrimeTime.
+      Focuses on timing debugging, ECO generation, and signoff.
+    expertise:
+      - static_timing_analysis
+      - timing_debug
+      - eco_generation
+      - mcmm_analysis
+    tools:
+      - pt_shell
+    tags:
+      - timing
+      - primetime
+      - sta
+      - signoff
+
+  - id: synops-synthesis-agent
+    name: Synops Synthesis Agent
+    version: "1.0.0"
+    description: >
+      Agent for logic synthesis using Design Compiler.
+      Covers synthesis strategy, constraint writing, and QoR optimization.
+    expertise:
+      - logic_synthesis
+      - netlist_optimization
+      - timing_driven_synthesis
+      - area_optimization
+    tools:
+      - dc_shell
+    tags:
+      - synthesis
+      - design-compiler
+      - netlist
+      - rtl
+
+  - id: synops-verification-agent
+    name: Synops Physical Verification Agent
+    version: "1.0.0"
+    description: >
+      Agent for physical verification including DRC, LVS, and ERC
+      using Synopsys IC Validator (ICV).
+    expertise:
+      - drc
+      - lvs
+      - erc
+      - parasitic_extraction
+    tools:
+      - icv
+      - starrc
+    tags:
+      - verification
+      - drc
+      - lvs
+      - icv
+      - starrc
+
+  - id: synops-power-agent
+    name: Synops Power Analysis Agent
+    version: "1.0.0"
+    description: >
+      Specialized agent for power analysis, IR drop, and power optimization
+      across all design stages.
+    expertise:
+      - power_analysis
+      - ir_drop
+      - power_optimization
+      - clock_gating
+    tools:
+      - icc2_shell
+      - pt_shell
+    tags:
+      - power
+      - ir-drop
+      - low-power
+
+discovery:
+  search_fields:
+    - id
+    - name
+    - description
+    - expertise
+    - tags
+  default_limit: 5
+  similarity_threshold: 0.3
+
+routing:
+  strategy: expertise_match
+  fallback: synops-pnr-agent
+  multi_agent:
+    enabled: true
+    max_parallel: 3
+    coordination: sequential
