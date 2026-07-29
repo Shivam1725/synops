@@ -1,0 +1,1 @@
+# Synops agent discovery package
