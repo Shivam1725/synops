@@ -1,0 +1,24 @@
+# Cadence and library collateral
+*.lib
+*.db
+*.lef
+*.gds
+*.gds.gz
+*.oa
+*.enc
+*.enc.dat/
+fe/
+*.cmd*
+*.log*
+genus.*
+innovus.*
+.simvision/
+qrc*
+
+# Generated flow outputs
+logs/*
+!logs/.gitkeep
+outputs/*
+!outputs/.gitkeep
+reports/*
+!reports/.gitkeep
